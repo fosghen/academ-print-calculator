@@ -1,0 +1,45 @@
+{
+  "version": "public-2026-11-21",
+  "currency": "RUB",
+  "vat_percent": "20",
+  "minimum_order": "100",
+  "business_cards": {
+    "prices": {
+      "smooth": {
+        "1": {"48": "180", "96": "280", "144": "350", "192": "420", "312": "600", "504": "780", "1008": "1200"},
+        "2": {"48": "220", "96": "360", "144": "500", "192": "620", "312": "850", "504": "1150", "1008": "1900"}
+      },
+      "designer": {
+        "1": {"48": "270", "96": "460", "144": "610", "192": "770", "312": "1030", "504": "1650", "1008": "2700"},
+        "2": {"48": "320", "96": "560", "144": "810", "192": "1020", "312": "1430", "504": "2090", "1008": "3300"}
+      }
+    }
+  },
+  "digital_print": {
+    "formats_up": {"A3": 1, "A4": 2, "A5": 4, "A6": 8},
+    "cutting": "150",
+    "saddle_stitch": "12",
+    "prices": {
+      "1": {
+        "90": [{"max_quantity": 1, "price": "45"}, {"max_quantity": 5, "price": "30"}, {"max_quantity": 10, "price": "24"}, {"max_quantity": 50, "price": "22"}, {"max_quantity": 100, "price": "20"}, {"max_quantity": 200, "price": "18"}, {"max_quantity": null, "price": "16"}],
+        "120": [{"max_quantity": 1, "price": "46"}, {"max_quantity": 5, "price": "31"}, {"max_quantity": 10, "price": "25"}, {"max_quantity": 50, "price": "23"}, {"max_quantity": 100, "price": "21"}, {"max_quantity": 200, "price": "19"}, {"max_quantity": null, "price": "17"}],
+        "160": [{"max_quantity": 1, "price": "47"}, {"max_quantity": 5, "price": "32"}, {"max_quantity": 10, "price": "26"}, {"max_quantity": 50, "price": "24"}, {"max_quantity": 100, "price": "22"}, {"max_quantity": 200, "price": "20"}, {"max_quantity": null, "price": "18"}]
+      },
+      "2": {
+        "90": [{"max_quantity": 1, "price": "70"}, {"max_quantity": 5, "price": "52"}, {"max_quantity": 10, "price": "42"}, {"max_quantity": 50, "price": "38"}, {"max_quantity": 100, "price": "35"}, {"max_quantity": 200, "price": "30"}, {"max_quantity": null, "price": "26"}],
+        "120": [{"max_quantity": 1, "price": "71"}, {"max_quantity": 5, "price": "53"}, {"max_quantity": 10, "price": "43"}, {"max_quantity": 50, "price": "39"}, {"max_quantity": 100, "price": "36"}, {"max_quantity": 200, "price": "31"}, {"max_quantity": null, "price": "27"}],
+        "160": [{"max_quantity": 1, "price": "72"}, {"max_quantity": 5, "price": "54"}, {"max_quantity": 10, "price": "44"}, {"max_quantity": 50, "price": "40"}, {"max_quantity": 100, "price": "37"}, {"max_quantity": 200, "price": "32"}, {"max_quantity": null, "price": "28"}]
+      }
+    }
+  },
+  "banners": {
+    "waste_percent": "5",
+    "hemming_per_metre": "10",
+    "eyelet": "10",
+    "materials": {
+      "banner_440": {"label": "Баннер ПВХ 440 г/м²", "max_width_mm": 1500, "price_per_linear_metre": "800"},
+      "poster_150": {"label": "Постерная бумага 150 г/м²", "max_width_mm": 1300, "price_per_linear_metre": "600"},
+      "vinyl": {"label": "Самоклеящаяся плёнка ПВХ", "max_width_mm": 1500, "price_per_linear_metre": "800"}
+    }
+  }
+}

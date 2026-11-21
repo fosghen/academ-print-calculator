@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Калькулятор полиграфии</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='/styles.css') }}">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="На главную">
+      <span class="brand-mark">AP</span>
+      <span>Академ-принт <small>калькулятор заказов</small></span>
+    </a>
+    <span class="status">Тарифы {{ rate_version }}</span>
+  </header>
+
+  <main>
+    <section class="intro">
+      <p class="eyebrow">Предварительная калькуляция</p>
+      <h1>Стоимость тиража<br>за пару минут</h1>
+      <p>Выберите изделие и параметры. Калькулятор покажет производственную стоимость,
+        наценку и цену за единицу.</p>
+    </section>
+
+    <section class="workspace">
+      <form action="/calculate" method="post" class="calculator" id="quote-form">
+        <div class="section-heading">
+          <span>Параметры заказа</span>
+          <span class="step">01</span>
+        </div>
+
+        <label>
+          Изделие
+          <select name="product_type" id="product-type">
+            <option value="business_cards" {% if form.product_type == 'business_cards' %}selected{% endif %}>Визитки</option>
+            <option value="flyers" {% if form.product_type == 'flyers' %}selected{% endif %}>Листовки</option>
+            <option value="brochures" {% if form.product_type == 'brochures' %}selected{% endif %}>Брошюры</option>
+            <option value="banners" {% if form.product_type == 'banners' %}selected{% endif %}>Баннеры и постеры</option>
+          </select>
+        </label>
+
+        <div class="grid two">
+          <label>
+            Тираж, шт.
+            <input type="number" name="quantity" min="1" value="{{ form.quantity or 96 }}" required>
+          </label>
+          <label class="digital-field">
+            Формат
+            <select name="format">
+              {% for size in ['A3', 'A4', 'A5', 'A6'] %}
+                <option value="{{ size }}" {% if form.format == size or (not form.format and size == 'A5') %}selected{% endif %}>{{ size }}</option>
+              {% endfor %}
+            </select>
+          </label>
+        </div>
+
+        <div class="grid two print-field">
+          <label>
+            Материал
+            <select name="material" id="material">
+              <optgroup label="Визитки" class="card-options">
+                <option value="smooth">ColorCopy, гладкая</option>
+                <option value="designer">Дизайнерская бумага</option>
+              </optgroup>
+              <optgroup label="Цифровая печать" class="digital-options">
+                <option value="90">Бумага 90 г/м²</option>
+                <option value="120">Бумага 120 г/м²</option>
+                <option value="160">Бумага 160 г/м²</option>
+              </optgroup>
+              <optgroup label="Широкий формат" class="banner-options">
+                <option value="banner_440">Баннер ПВХ 440 г/м²</option>
+                <option value="poster_150">Постерная бумага</option>
+                <option value="vinyl">Самоклеящаяся плёнка</option>
+              </optgroup>
+            </select>
+          </label>
+          <label>
+            Печать
+            <select name="sides">
+              <option value="1" {% if form.sides == '1' %}selected{% endif %}>4+0 · одна сторона</option>
+              <option value="2" {% if form.sides == '2' %}selected{% endif %}>4+4 · две стороны</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="grid three banner-field">
+          <label>Ширина, мм<input type="number" name="width_mm" min="1" value="{{ form.width_mm or 1200 }}"></label>
+          <label>Высота, мм<input type="number" name="height_mm" min="1" value="{{ form.height_mm or 2000 }}"></label>
+          <label>Люверсов на изделие<input type="number" name="eyelets" min="0" value="{{ form.eyelets or 0 }}"></label>
+        </div>
+
+        <label class="brochure-field">
+          Количество страниц
+          <input type="number" name="pages" min="4" step="4" value="{{ form.pages or 8 }}">
+        </label>
+
+        <div class="options">
+          <label class="check digital-field"><input type="checkbox" name="cutting" {% if form.cutting %}checked{% endif %}><span>Резка тиража</span></label>
+          <label class="check banner-field"><input type="checkbox" name="hemming" {% if form.hemming %}checked{% endif %}><span>Подгибка края</span></label>
+          <label class="check"><input type="checkbox" name="include_vat" {% if form.include_vat %}checked{% endif %}><span>Добавить НДС 20%</span></label>
+        </div>
+
+        <label>
+          Наценка, %
+          <input type="number" name="markup_percent" min="0" max="500" step="0.1" value="{{ form.markup_percent or 20 }}">
+        </label>
+
+        <button type="submit">Рассчитать стоимость</button>
+      </form>
+
+      <aside class="result" aria-live="polite">
+        <div class="section-heading">
+          <span>Калькуляция</span>
+          <span class="step">02</span>
+        </div>
+        {% if error %}
+          <div class="error"><strong>Проверьте параметры</strong><p>{{ error }}</p></div>
+        {% elif quote %}
+          <div class="total-label">Стоимость заказа</div>
+          <div class="total">{{ quote.total | ruble }} <small>₽</small></div>
+          <div class="unit">{{ quote.unit_price | ruble }} ₽ за единицу</div>
+          <dl class="breakdown">
+            {% for line in quote.lines %}<div><dt>{{ line.label }}</dt><dd>{{ line.amount | ruble }} ₽</dd></div>{% endfor %}
+            <div><dt>Наценка</dt><dd>{{ quote.markup | ruble }} ₽</dd></div>
+            {% if quote.vat %}<div><dt>НДС</dt><dd>{{ quote.vat | ruble }} ₽</dd></div>{% endif %}
+          </dl>
+          {% if quote.minimum_order_applied %}<p class="notice">Применена минимальная стоимость заказа.</p>{% endif %}
+          <button type="button" class="secondary" onclick="window.print()">Печать расчёта</button>
+        {% else %}
+          <div class="empty">
+            <span>₽</span>
+            <h2>Здесь появится расчёт</h2>
+            <p>Стоимость разбивается по операциям, чтобы менеджер видел происхождение итоговой цены.</p>
+          </div>
+        {% endif %}
+      </aside>
+    </section>
+  </main>
+  <footer>Предварительный расчёт · финальную цену подтверждает менеджер</footer>
+  <script src="{{ url_for('static', path='/app.js') }}" defer></script>
+</body>
+</html>
